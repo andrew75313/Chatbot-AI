@@ -1,9 +1,13 @@
 package com.example.chatbotai.global.security.config;
 
 import com.example.chatbotai.global.security.authentication.JwtAuthenticationFilter;
+import com.example.chatbotai.global.security.authorization.JwtAuthenticationEntryPoint;
+import com.example.chatbotai.global.security.authorization.JwtAuthorizationFilter;
+import com.example.chatbotai.global.security.handler.JwtAccessDeniedHandler;
 import com.example.chatbotai.global.security.handler.JwtAuthenticationFailureHandler;
 import com.example.chatbotai.global.security.handler.JwtAuthenticationSuccessHandler;
 import com.example.chatbotai.global.security.jwt.JwtUtil;
+import com.example.chatbotai.global.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -23,9 +28,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
     private final JwtAuthenticationFailureHandler jwtAuthenticationFailureHandler;
+    private final JwtAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -47,6 +55,16 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public JwtAuthorizationFilter jwtAuthorizationFilter() {
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, authenticationEntryPoint, accessDeniedHandler);
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new JwtAccessDeniedHandler();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable());
@@ -62,7 +80,8 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
         );
 
-        http.addFilterAt(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
 
         return http.build();
     }

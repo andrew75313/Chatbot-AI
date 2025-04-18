@@ -18,3 +18,10 @@ jwt:
   secret-key: ${JWT_SECRET_KEY}
   access-token-time: ${JWT_ACCESS_TOKEN_TIME}
   refresh-token-time: ${JWT_REFRESH_TOKEN_TIME}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.springframework.jdbc.core: DEBUG
