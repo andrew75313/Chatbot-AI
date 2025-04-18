@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  chatbotai_postgresql:
+    image: postgres:15
+    container_name: chatbotai_postgresql
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: chatbot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    env_file: "chatbot.env"
+    volumes:
+      - chatbot_postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d/init.sq
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - chatbot-network
+
+  chatbotai_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatbotai_app
+    ports:
+      - 8080:8080
+    env_file: "chatbot.env"
+    depends_on:
+      chatbotai_postgresql:
+        condition: service_healthy
+    networks:
+      - chatbot-network
+
+volumes:
+  chatbot_postgres_data:
+
+networks:
+  chatbot-network:
+    driver: bridge
