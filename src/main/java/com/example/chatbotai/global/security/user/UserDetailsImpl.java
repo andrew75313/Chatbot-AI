@@ -10,12 +10,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 @Getter
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;
+
+    public UUID getId() {
+        return user.getId();
+    }
 
     @Override
     public String getPassword() {
