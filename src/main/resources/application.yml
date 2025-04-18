@@ -19,6 +19,10 @@ jwt:
   access-token-time: ${JWT_ACCESS_TOKEN_TIME}
   refresh-token-time: ${JWT_REFRESH_TOKEN_TIME}
 
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
 logging:
   level:
     org.springframework.security: DEBUG
