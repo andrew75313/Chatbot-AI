@@ -1,0 +1,20 @@
+package com.example.chatbotai.global.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.ZonedDateTime;
+
+@Getter
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class Timestamped {
+
+    @CreatedDate
+    @Column(nullable = false)
+    private ZonedDateTime createdAt;
+}
