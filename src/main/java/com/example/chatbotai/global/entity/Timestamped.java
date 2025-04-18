@@ -7,7 +7,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
@@ -16,5 +16,5 @@ public abstract class Timestamped {
 
     @CreatedDate
     @Column(nullable = false)
-    private ZonedDateTime createdAt;
+    private LocalDateTime createdAt;
 }
