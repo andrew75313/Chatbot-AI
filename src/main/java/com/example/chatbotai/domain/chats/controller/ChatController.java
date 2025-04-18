@@ -3,7 +3,6 @@ package com.example.chatbotai.domain.chats.controller;
 import com.example.chatbotai.domain.chats.dto.ChatRequestDTO;
 import com.example.chatbotai.domain.chats.dto.ChatResponseDTO;
 import com.example.chatbotai.domain.chats.service.ChatService;
-import com.example.chatbotai.domain.users.service.UserService;
 import com.example.chatbotai.global.security.user.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
 
     private final ChatService chatService;
-    private final UserService userService;
 
     @PostMapping("")
     public ResponseEntity<ChatResponseDTO> createChat(@Valid @RequestBody ChatRequestDTO requestDTO,
