@@ -13,3 +13,19 @@ spring:
 admin:
   signup:
     code : ${ADMIN_SIGNUP_CODE}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-time: ${JWT_ACCESS_TOKEN_TIME}
+  refresh-token-time: ${JWT_REFRESH_TOKEN_TIME}
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.springframework.jdbc.core: DEBUG
